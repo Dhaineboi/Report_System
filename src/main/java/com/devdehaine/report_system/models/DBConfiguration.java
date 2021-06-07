@@ -33,7 +33,8 @@ public class DBConfiguration {
         this.password = password;
         this.schema = schema;
         this.query = query;
-        this.url = "jdbc:mysql://"+this.ipAddress+":"+this.port+"/"+this.schema;
+        //this.url = "jdbc:mysql://"+this.ipAddress+":"+this.port+"/"+this.schema;
+        this.url = "jdbc:jtds:sqlserver://"+this.ipAddress+":"+this.port+";databasename="+this.schema;
         System.out.println("The url is : " + this.url);
     }
 
@@ -64,9 +65,11 @@ public class DBConfiguration {
 
 
 
-    public  List<Map<String, String>> fetchDataForExcel() {
+    public  List<List<Map<String, String>>> fetchDataForExcel() {
 
-        List<Map<String, String>> data = new ArrayList<>();
+        List<List<Map<String, String>>> data = new ArrayList<>();
+        List<Map<String, String>> columnNames = new ArrayList<>();
+        List<Map<String, String>> values = new ArrayList<>();
         try {
             Class.forName(driver);
             conn = DriverManager.getConnection(url, userName, password);
@@ -77,16 +80,26 @@ public class DBConfiguration {
             ResultSetMetaData metaData = rs.getMetaData();
 
             int columnCount = metaData.getColumnCount();
+            Map<String, String> columnData = new HashMap<>();
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metaData.getColumnName(i);
+                System.out.println("Name of column : " + columnName);
+                columnData.put("column_"+i,columnName);
+            }
+            System.out.println("names here = " + columnData);
+            columnNames.add(columnData);
             while(rs.next()) {
                 Map<String, String> mapdata = new HashMap<>();
-                for (int i = 1; i < columnCount; i++) {
+                for (int i = 1; i <= columnCount; i++) {
                     mapdata.put(metaData.getColumnName(i), rs.getString(metaData.getColumnName(i)));
                 }
-                data.add(mapdata);
+                values.add(mapdata);
             }
+
+
+            data.add(columnNames);
+            data.add(values);
             System.out.println("The data size is : " + data.size());
-
-
 
 //            while(rs.next()){
 //                Map<String, String> mapdata = new HashMap<>();

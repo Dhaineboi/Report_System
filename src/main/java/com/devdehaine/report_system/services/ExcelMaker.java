@@ -1,4 +1,4 @@
-package com.devdehaine.report_system.models;
+package com.devdehaine.report_system.services;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -161,7 +161,7 @@ public class ExcelMaker {
         File currentDirectory = new File(".");
         String path = currentDirectory.getAbsolutePath();
         System.out.println("Path : " + path);
-        String fileLocation = path.substring(0,path.length() -1) + "dataFromDb.xlsx";
+        String fileLocation = path.substring(0,path.length() -1) + "dataFromDb2.xlsx";
         System.out.println("File_Location : " + fileLocation);
         try {
             FileOutputStream outputStream = new FileOutputStream(fileLocation);
